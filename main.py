@@ -1,51 +1,93 @@
 # Link to assignment: https://westernonline.wiu.edu/d2l/le/content/169197/viewContent/2469388/View?ou=169197
+# Data used: https://www.kaggle.com/vinaypratap/flight-price
 
-# Option 1
+# Authors: Evan Colwell
+#          Gavin Horner
+# School: Western Illinois University
+# Class: CS210: Python for Data Exploration
+
+import pandas as pd
+
+flights_df = pd.read_csv("Data_Train.csv")  # Open our data file and store it as a data frame for use within the methods
+print(flights_df)
+unique_airlines = set(flights_df.Airline)  # A set of unique airlines declared early for use in option 9.
+unique_airlines_list = list(
+    unique_airlines)  # A list of unique airlines for easy index access declared early for use in option 7
+
+
+# Option 1 (Gavin)
 def search_by_source_destination():
     print("You chose option 1.")
+    day = input("Please enter a day:")
+    month = input("Please enter a month:")
 
 
-# Option 2
+# Option 2 (Evan)
 def search_by_source_departure_by_date():
     print("You chose option 2.")
 
 
-# Option 3
+# Option 3 (Gavin)
 def find_cheapest():
     print("You chose option 3.")
 
 
-# Option 4
+# Option 4 (Evan)
 def find_min_dur():
     print("You chose option 4.")
 
 
-# Option 5
+# Option 5 (Gavin)
 def search_specific_route():
     print("You chose option 5.")
 
 
-# Option 6
+# Option 6 (Evan)
 def find_source_to_dest_by_date_and_price():
     print("You chose option 6.")
 
 
-# Option 7
+# Option 7 (Gavin) COMPLETED
 def display_summary_of_airline():
     print("You chose option 7.")
+    print('____________________________________')
+    num_of_unique_airlines = len(unique_airlines)
+    num_of_flights = len(flights_df.Airline)
+    for i in range(0, num_of_unique_airlines):  # For every unique airline
+        max = 0  # Set max to 0 for initialization
+        min = 1000000000  # Set min to arbitrary number for initialization
+        for j in range(0, num_of_flights):  # For every flight
+            if unique_airlines_list[i] == flights_df.Airline[j]:  # If the unique airline and the current flight's
+                if flights_df.Price[j] > max:                     # airline matches, and if the price of that flight is
+                    max = flights_df.Price[j]                     # greater than the current max, then set the max to
+                                                                  # that price.
+                if flights_df.Price[j] < min:                     # If the price is lower than the min, then set the min
+                    min = flights_df.Price[j]                     # to that price.
+
+        print(f'{unique_airlines_list[i]} max: {max}')  # Print our airline and its respective max price
+        print(f'{unique_airlines_list[i]} min: {min}')  # Print our airline and its respective min price
+        if i != num_of_unique_airlines - 1: # If statement for formatting to not print a dotted line at the very end
+            print('------------------------------------')
+    print('____________________________________')
 
 
-# Option 8
+# Option 8 (Evan)
 def print_unique_cities():
     print("You chose option 8.")
 
 
-# Option 9
+# Option 9 (Gavin) COMPLETED
 def print_unique_airlines():
     print("You chose option 9.")
+    print("___________________________")
+    print("Unique Airlines consist of:")
+    print("---------------------------")
+    for airline in unique_airlines:  # For every airline in the unique airline set, print it
+        print(airline)
+    print("___________________________")
 
 
-# Option 10
+# Option 10 (Evan)
 def print_all_cities_by_airline():
     print("You chose option 10.")
 
@@ -53,8 +95,9 @@ def print_all_cities_by_airline():
 ######################
 #        MAIN        #
 ######################
-cont = True
-while cont:
+
+cont = True  # Condition to keep while loop going until told otherwise
+while cont:  # While loop to continuously print the user's options and execute the option corresponding to user input
     print()
     print("1 - Search flights by source and destination in a specific day and month.")
     print("2 - Search flights by source city and departure time within specific date interval (ex: from 1/1 to 1/10).")
@@ -97,7 +140,6 @@ while cont:
         print_all_cities_by_airline()
     elif option == 11:
         print("Exiting...")
-        break
+        cont = False
     else:
         print("Invalid option. Please try again.")
-        continue
