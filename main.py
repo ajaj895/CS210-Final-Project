@@ -10,14 +10,19 @@ import pandas as pd
 
 flights_df = pd.read_csv("Data_Train.csv")  # Open our data file and store it as a data frame for use within the methods
 unique_airlines = set(flights_df.Airline)  # A set of unique airlines declared early for use in option 9.
-unique_airlines_list = list(unique_airlines)  # A list of unique airlines for easy index access declared early for use in option 7
-num_of_flights = len(flights_df.Airline) # Length of the dataset for use in any option 1 and 7
+unique_airlines_list = list(
+    unique_airlines)  # A list of unique airlines for easy index access declared early for use in option 7
+num_of_flights = len(flights_df.Airline)  # Length of the dataset for use in any option 1 and 7
 
 pd.set_option('display.width', 320)
 pd.set_option("display.max_columns", 11)  # All necessary for proper formatting in the Run output box
 pd.set_option("display.max_rows", 10683)  # Comment out as needed
 
-# Option 1 (Gavin) IN PROGRESS
+
+# Option 1 (Gavin) COMPLETED
+# search_by_source_destination() searches flights by the user's given source, destination, day, and month
+# and returns a dataframe with any flights matching the user's input. If there is no matches, the user will
+# be informed of this.
 def search_by_source_destination():
     print("You chose option 1.")
     source = input("Please enter a source: ")
@@ -25,14 +30,17 @@ def search_by_source_destination():
     day = input("Please enter a day: ")
     month = input("Please enter a month: ")
 
-    rows = []
-    for i in range(0, num_of_flights):
-        flight_day, flight_month, flight_year = flights_df.Date_of_Journey[i].split('/')
-        if flights_df.Source[i] == source:
-            if flights_df.Destination[i] == destination:
-                if flight_day == day:
-                    if flight_month == month:
-                        rows.append([flights_df.iloc[[i]]])
+    date = f'{day}/{month}/2019' # Declare our date, 2019 static as all entries are from 2019
+    user_source = flights_df.Source == source  # Condition so the sources match
+    user_destination = flights_df.Destination == destination # Condition so the destinations match
+    user_date = flights_df.Date_of_Journey == date # Condition so the dates match
+
+    user_flights = flights_df[user_source & user_destination & user_date]  # Assign any matching flights to user_flights
+
+    if user_flights.size > 0:  # If there are any matching flights
+        print(user_flights) # Print any flights matching the conditions
+    else:
+        print("Sorry, there were no flights matching the data you entered. Please try again.")
 
 
 # Option 2 (Evan)
@@ -40,10 +48,30 @@ def search_by_source_departure_by_date():
     print("You chose option 2.")
 
 
-# Option 3 (Gavin)
+# Option 3 (Gavin) COMPLETED
+# find_cheapest() finds the cheapest flights from the user's given source and destination.
+# This function will return a dataframe with any flights matching the user's input. If there is no matches,
+# the user will be informed of this.
 def find_cheapest():
     print("You chose option 3.")
+    source = input("Please enter a source: ")
+    destination = input("Please enter a destination: ")
+    cheapest = 1000000000  # Assign an arbitrary number to be redefined
+    for i in range(0, num_of_flights):  # For all flights in the dataset
+        if flights_df.Source[i] == source:  # If the sources match
+            if flights_df.Destination[i] == destination: # And the destinations match
+                if flights_df.Price[i] < cheapest: # And the price is lower than the current cheapest
+                    cheapest = flights_df.Price[i]  # Reassign cheapest to be that price
 
+    user_source = flights_df.Source == source  # Condition so that the sources match
+    user_destination = flights_df.Destination == destination  # Condition so that the destinations match
+    cheapest_flight = flights_df.Price == cheapest  # Condition so that the prices match
+
+    user_flights = flights_df[user_source & user_destination & cheapest_flight] # Assign any matching flights to user_flights
+    if user_flights.size > 0:  # If there are any matching flights
+        print(user_flights)    # Print them out
+    else:
+        print("Sorry, there were no flights matching the data you entered. Please try again.")
 
 # Option 4 (Evan)
 def find_min_dur():
@@ -51,12 +79,19 @@ def find_min_dur():
 
 
 # Option 5 (Gavin) COMPLETED
+# search_specific_route() searches for the user's given route and returns a dataframe with any flights
+# that have the exact same route as the user's input. If there is no matching route, then the user will be informed.
 def search_specific_route():
     print("You chose option 5.")
     print('____________________________________')
     user_route = input('Enter your specific route (ex: BLR to BOM to AMD to DEL): ')
     full_route = user_route.replace('to', '?')  # Because the dataset is formatted with ? between each stop for some reason
-    print(flights_df[flights_df.Route == full_route]) # Prints any flight with the matching route from the dataset
+    user_flights = flights_df[flights_df.Route == full_route] # Assign any matching flights to user_flights
+
+    if user_flights.size > 0: # If there are any flights matching the route
+        print(user_flights) # Prints any flight with the matching route from the dataset
+    else:
+        print("Sorry, there were no flights matching the data you entered. Please try again.")
 
 
 # Option 6 (Evan)
@@ -65,6 +100,8 @@ def find_source_to_dest_by_date_and_price():
 
 
 # Option 7 (Gavin) COMPLETED
+# display_summary_of_airline() will display a summary for each airline that includes the cheapest
+# and the most expensive flight per airline.
 def display_summary_of_airline():
     print("You chose option 7.")
     print('____________________________________')
@@ -75,8 +112,7 @@ def display_summary_of_airline():
         for j in range(0, num_of_flights):  # For every flight
             if unique_airlines_list[i] == flights_df.Airline[j]:  # If the unique airline and the current flight's
                 if flights_df.Price[j] > max:  # airline matches, and if the price of that flight is
-                    max = flights_df.Price[j]  # greater than the current max, then set the max to
-                    # that price.
+                    max = flights_df.Price[j]  # greater than the current max, then set the max to that price.
                 if flights_df.Price[j] < min:  # If the price is lower than the min, then set the min
                     min = flights_df.Price[j]  # to that price.
 
@@ -93,6 +129,7 @@ def print_unique_cities():
 
 
 # Option 9 (Gavin) COMPLETED
+# print_unique_airlines() will print every unique airline from the dataset full of flights.
 def print_unique_airlines():
     print("You chose option 9.")
     print("___________________________")
