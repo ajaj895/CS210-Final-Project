@@ -3,6 +3,7 @@
 
 # Authors: Evan Colwell
 #          Gavin Horner
+# Date: November 2020
 # School: Western Illinois University
 # Class: CS210: Python for Data Exploration
 
@@ -44,8 +45,45 @@ def search_by_source_destination():
 
 
 # Option 2 (Evan)
+# search_by_source_departure_by_date() searches for flights based on starting city and date range
 def search_by_source_departure_by_date():
     print("You chose option 2.")
+    print('____________________________________')
+    start_city = input('Enter the starting city: ').capitalize()
+    start_range = input('Enter the first day in your range (month/day): ')
+    end_range = input('Enter the last day in your range (month/day): ')
+
+    temp_start_list = start_range.split('/')
+    temp_end_list = end_range.split('/')
+    date_range = []  # List of dates, each element is list of a date ['day', 'month', 'year']
+
+    if temp_start_list[0] == temp_end_list[0]:  # Same month
+
+        if int(temp_start_list[0]) < 10:
+            month = f'0{temp_start_list[0]}'
+        else:
+            month = temp_start_list[0]
+        for i in range(int(temp_start_list[1]), int(temp_end_list[1])+1): # Inclusive
+            str_date = [str(i), month, '2019']  # day month year, the / is not needed to store
+            date_range.append(str_date)
+
+    hit = False # Used for telling if flights were found or not
+    for i in range(0, num_of_flights):
+        if flights_df.Source[i] == start_city:
+            # If the city is located, then check for the date match
+            check_date = flights_df.Date_of_Journey[i].split('/')
+            for date in date_range:  # For each date in the list is better than each flight in the DB
+                if check_date[1] == date[1]:  # Check month
+                    if check_date[0] == date[0]:  # Check day
+                        print('______________________________________________')  # For looks
+                        print(flights_df.loc[i])
+                        print('______________________________________________')  # For looks
+                        hit = True
+    if not hit:
+        print('____________________________________')
+        print('No flights found!')
+        print('____________________________________')
+
 
 
 # Option 3 (Gavin) COMPLETED
@@ -76,7 +114,7 @@ def find_cheapest():
 # Option 4 (Evan)
 def find_min_dur():
     print("You chose option 4.")
-
+    print('____________________________________')
 
 # Option 5 (Gavin) COMPLETED
 # search_specific_route() searches for the user's given route and returns a dataframe with any flights
