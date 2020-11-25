@@ -7,7 +7,7 @@
 # School: Western Illinois University
 # Class: CS210: Python for Data Exploration
 
-import re
+import re  # Needed for option 4
 import pandas as pd
 
 flights_df = pd.read_csv("Data_Train.csv")  # Open our data file and store it as a data frame for use within the methods
@@ -127,6 +127,7 @@ def search_by_source_departure_by_date():
                         day = f'0{d}'
                     str_date = [day, month, '2019']  # day month year, the / is not needed to store
                     date_range.append(str_date)
+
     hit = False # Used for telling if flights were found or not
     for i in range(0, num_of_flights):
         if flights_df.Source[i] == start_city:
@@ -143,6 +144,66 @@ def search_by_source_departure_by_date():
         print('____________________________________')
         print('No flights found!')
         print('____________________________________')
+
+#  Option 2 (cont.) (Evan)
+#  Overloaded version of option 2, used to return a list of dataframe locations used in option 6
+def search_by_source_departure_by_date_list(start_city, start_date_list, end_date_list):
+
+    date_range = []  # List of dates, each element is list of a date ['day', 'month', 'year']
+    found_flights = []
+
+    # --- date_range formatting ---
+    if start_date_list[0] == end_date_list[0]:  # Same month
+        if int(start_date_list[0]) < 10:  # Formats the month if less than 10 (ex 05, or 01)
+            month = f'0{start_date_list[0]}'
+        else:
+            month = start_date_list[0]
+        for i in range(int(start_date_list[1]), int(end_date_list[1])+1): # Inclusive
+            day = f'{i}'
+            if i < 10:  # Formats the day
+                day = f'0{i}'
+            str_date = [day, month, '2019']  # day month year, the / is not needed to store
+            date_range.append(str_date)
+    else:
+        for m in range(int(start_date_list[0]), int(end_date_list[0])+1): # For each month inclusive
+            if int(start_date_list[0]) < 10:  # Formats the month if less than 10 (ex 05, or 01)
+                month = f'0{m}'
+            else:
+                month = f'{m}'
+            if m == int(start_date_list[0]):  # The start month
+                for d in range(int(start_date_list[1]), 32):
+                    day = f'{d}'
+                    if d < 10:  # Formats the day
+                        day = f'0{d}'
+                    str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date)
+            elif m == int(end_date_list[0]):  # If the end month has been reached, inclusive
+                for d in range(1, int(end_date_list[1])+1):
+                    day = f'{d}'
+                    if d < 10:  # Formats the day
+                        day = f'0{d}'
+                    str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date)
+            else:  # Any month in-between start and end month
+                for d in range(1,32):
+                    day = f'{d}'
+                    if d < 10:  # Formats the day
+                        day = f'0{d}'
+                    str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date)
+    # --- End of date_range formatting ---
+
+    for i in range(0, num_of_flights):
+        if flights_df.Source[i] == start_city:
+            # If the city is located, then check for the date match
+            check_date = flights_df.Date_of_Journey[i].split('/')
+            for date in date_range:  # For each date in the list is better than each flight in the DB
+                if check_date[1] == date[1]:  # Check month
+                    if check_date[0] == date[0]:  # Check day
+                        found_flights.append(i)  # Adds to the found flight list
+
+    return found_flights  # Returns an empty list if nothing is found
+
 
 
 
@@ -171,7 +232,7 @@ def find_cheapest():
     else:
         print("Sorry, there were no flights matching the data you entered. Please try again.")
 
-# Option 4 (Evan)
+# Option 4 (Evan) - Complete
 # find_min_dur finds the minimum length flight from source to destination.
 def find_min_dur():
     print("You chose option 4.")
@@ -241,9 +302,85 @@ def search_specific_route():
         print("Sorry, there were no flights matching the data you entered. Please try again.")
 
 
-# Option 6 (Evan)
+# Option 6 (Evan) - Completed
+# Finds a flight by source/destination/date and price
 def find_source_to_dest_by_date_and_price():
     print("You chose option 6.")
+    print('____________________________________')
+    final_check_list = []  # Used for the flights found by destination, check by price still needed
+    found_flights = []  # Used for found flights
+
+    start_city = input('Enter the starting city: ').capitalize()  # Makes sure that the format is not a problem
+    destination = input('Enter the destination: ').capitalize()
+
+    # --- Error Handling with input ---
+    while 1:
+        error = False
+        start_range = input('Enter the first day in your range (month/day): ')
+        end_range = input('Enter the last day in your range (month/day): ')
+        temp_start_list = start_range.split('/')
+        temp_end_list = end_range.split('/')
+
+        try:  # Checks for if a non int has been entered
+            int(temp_start_list[0])
+            int(temp_start_list[1])
+            int(temp_end_list[0])
+            int(temp_end_list[1])
+        except ValueError:  # When the string can't be turned into an int
+            print('____________________________________')
+            print('Error! A date with numbers must be used (ex. 1/10, 5/18).')
+            print('____________________________________')
+            continue  # Returns to the top of the while loop
+        # If the months are the same but the end date is before the start date, compares ascii codes not int values
+        if temp_start_list[0] == temp_end_list[0] and int(temp_start_list[1]) > int(temp_end_list[1]):
+            error = True
+            print('____________________________________')
+            print('Error! End date can not be before start date.')
+            print('____________________________________')
+        # End month before start month. This only works since our dataset is one year, doesn't work for Dec-Jan flights
+        elif temp_start_list[0] > temp_end_list[0]:
+            error = True
+            print('____________________________________')
+            print('Error! End date can not be before start date.')
+            print('____________________________________')
+        if not error:  # If no error has occurred
+            break
+    # --- End of date range error handling ---
+    # --- Price handling ---
+    price_max = 0
+    while 1:
+        try:
+            price_max = int(input('Enter the max price in your range (only numbers and in Indian Rupees): '))
+        except ValueError:
+            print('Error! Numbers only for the price')
+            continue
+        if price_max < 0:
+            print('Error! Price range can\'t be negative.')
+        else:
+            break
+    # --- End of price handling ---
+    # --- End of error handling ---
+
+    # Finds start city and date range
+    found_list = search_by_source_departure_by_date_list(start_city, temp_start_list, temp_end_list)
+
+    for hit in found_list:  # Filters by destination
+        if flights_df.Destination[hit] == destination :
+            final_check_list.append(hit)
+
+    for hit in final_check_list:  # Filters by price
+        if int(flights_df.Price[hit]) < price_max:
+            found_flights.append(hit)
+
+    if len(found_flights) > 0:  # If flights were found
+        for flight in found_flights:
+            print('____________________________________')
+            print(flights_df.loc[flight])
+            print('____________________________________')
+    else:
+        print('____________________________________')
+        print('No flights found!')
+        print('____________________________________')
 
 
 # Option 7 (Gavin) COMPLETED
