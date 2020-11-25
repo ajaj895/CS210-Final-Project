@@ -7,6 +7,7 @@
 # School: Western Illinois University
 # Class: CS210: Python for Data Exploration
 
+import re
 import pandas as pd
 
 flights_df = pd.read_csv("Data_Train.csv")  # Open our data file and store it as a data frame for use within the methods
@@ -171,9 +172,58 @@ def find_cheapest():
         print("Sorry, there were no flights matching the data you entered. Please try again.")
 
 # Option 4 (Evan)
+# find_min_dur finds the minimum length flight from source to destination.
 def find_min_dur():
     print("You chose option 4.")
     print('____________________________________')
+    start_city = input('Enter the starting city: ').capitalize()  # Makes sure that the format is not a problem
+    end_city = input('Enter the destination city: ').capitalize()
+    min_flight = ['100', '50']  # Arbitrary high number (first number is hours, second is minutes)
+    min_flight_num = -1  # An int used later to retrieve the minimum flight
+    # --- Flight finding logic ---
+    for flight in range(0, num_of_flights):
+        if flights_df.Source[flight] == start_city and flights_df.Destination[flight] == end_city:
+            duration = flights_df.Duration[flight].split()  # Slicing of the duration string
+            if len(duration) == 1:  # If the duration has only hours or minutes
+                if re.fullmatch(r'\d+h', duration[0]):  # If only hours duration
+                    hours = re.sub(r'h', '', duration[0])
+                    if int(hours) < int(min_flight[0]) and int(min_flight[1]) > 0:
+                        # If faster flight found, replaces the current minimum with this minimum flight
+                        min_flight[0] = hours
+                        min_flight[1] = 0
+                        min_flight_num = flight
+                else:
+                    minutes = re.sub(r'm', '', duration[1])
+                    if int(minutes) < int(min_flight[1]) and int(min_flight[0]) > 0:
+                        # If faster flight found, replaces the current minimum with this minimum flight
+                        min_flight[0] = 0
+                        min_flight[1] = minutes
+                        min_flight_num = flight
+            else:
+                hours = re.sub(r'h', '', duration[0])
+                minutes = re.sub(r'm', '', duration[1])
+                if int(hours) < int(min_flight[0]):
+                    # If faster flight found, replaces the current minimum with this minimum flight
+                    min_flight[0] = hours
+                    min_flight[1] = minutes
+                    min_flight_num = flight
+                elif hours == min_flight[0] and int(minutes) < int(min_flight[1]):
+                    # If faster flight found, replaces the current minimum with this minimum flight
+                    min_flight[0] = hours
+                    min_flight[1] = minutes
+                    min_flight_num = flight
+    # --- End of flight finding logic ---
+    if min_flight_num > -1:  # If a flight was found
+        print('____________________________________')
+        print(flights_df.loc[min_flight_num])
+        print('____________________________________')
+    else:  # If no flights were found
+        print('____________________________________')
+        print('No flights found!')
+        print('____________________________________')
+
+
+
 
 # Option 5 (Gavin) COMPLETED
 # search_specific_route() searches for the user's given route and returns a dataframe with any flights
