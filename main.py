@@ -44,29 +44,88 @@ def search_by_source_destination():
         print("Sorry, there were no flights matching the data you entered. Please try again.")
 
 
-# Option 2 (Evan)
+# Option 2 (Evan) - Completed
 # search_by_source_departure_by_date() searches for flights based on starting city and date range
+# Handles errors from the user and will not continue until the user enters the correct input
 def search_by_source_departure_by_date():
     print("You chose option 2.")
     print('____________________________________')
-    start_city = input('Enter the starting city: ').capitalize()
-    start_range = input('Enter the first day in your range (month/day): ')
-    end_range = input('Enter the last day in your range (month/day): ')
+    start_city = input('Enter the starting city: ').capitalize()  # Makes sure that the format is not a problem
 
-    temp_start_list = start_range.split('/')
-    temp_end_list = end_range.split('/')
+    # --- Error Handling with input ---
+    while 1:
+        error = False
+        start_range = input('Enter the first day in your range (month/day): ')
+        end_range = input('Enter the last day in your range (month/day): ')
+        temp_start_list = start_range.split('/')
+        temp_end_list = end_range.split('/')
+
+        try:  # Checks for if a non int has been entered
+            int(temp_start_list[0])
+            int(temp_start_list[1])
+            int(temp_end_list[0])
+            int(temp_end_list[1])
+        except ValueError:  # When the string can't be turned into an int
+            print('____________________________________')
+            print('Error! A date with numbers must be used (ex. 1/10, 5/18).')
+            print('____________________________________')
+            continue  # Returns to the top of the while loop
+        # If the months are the same but the end date is before the start date, compares ascii codes not int values
+        if temp_start_list[0] == temp_end_list[0] and int(temp_start_list[1]) > int(temp_end_list[1]):
+            error = True
+            print('____________________________________')
+            print('Error! End date can not be before start date.')
+            print('____________________________________')
+        # End month before start month. This only works since our dataset is one year, doesn't work for Dec-Jan flights
+        elif temp_start_list[0] > temp_end_list[0]:
+            error = True
+            print('____________________________________')
+            print('Error! End date can not be before start date.')
+            print('____________________________________')
+        if not error:  # If no error has occurred
+            break
+    # --- End of error handling ---
+
     date_range = []  # List of dates, each element is list of a date ['day', 'month', 'year']
 
     if temp_start_list[0] == temp_end_list[0]:  # Same month
-
-        if int(temp_start_list[0]) < 10:
+        if int(temp_start_list[0]) < 10:  # Formats the month if less than 10 (ex 05, or 01)
             month = f'0{temp_start_list[0]}'
         else:
             month = temp_start_list[0]
         for i in range(int(temp_start_list[1]), int(temp_end_list[1])+1): # Inclusive
-            str_date = [str(i), month, '2019']  # day month year, the / is not needed to store
+            day = f'{i}'
+            if i < 10:  # Formats the day
+                day = f'0{i}'
+            str_date = [day, month, '2019']  # day month year, the / is not needed to store
             date_range.append(str_date)
-
+    else:
+        for m in range(int(temp_start_list[0]), int(temp_end_list[0])+1): # For each month inclusive
+            if int(temp_start_list[0]) < 10:  # Formats the month if less than 10 (ex 05, or 01)
+                month = f'0{m}'
+            else:
+                month = f'{m}'
+            if m == int(temp_start_list[0]):  # The start month
+                for d in range(int(temp_start_list[1]), 32):
+                    day = f'{d}'
+                    if d < 10:  # Formats the day
+                        day = f'0{d}'
+                    str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date)
+            elif m == int(temp_end_list[0]):  # If the end month has been reached, inclusive
+                for d in range(1, int(temp_end_list[1])+1):
+                    day = f'{d}'
+                    if d < 10:  # Formats the day
+                        day = f'0{d}'
+                    str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date)
+            else:  # Any month in-between start and end month
+                for d in range(1,32):
+                    day = f'{d}'
+                    if d < 10:  # Formats the day
+                        day = f'0{d}'
+                    str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date)
     hit = False # Used for telling if flights were found or not
     for i in range(0, num_of_flights):
         if flights_df.Source[i] == start_city:
