@@ -15,6 +15,8 @@ unique_airlines = set(flights_df.Airline)  # A set of unique airlines declared e
 unique_airlines_list = list(
     unique_airlines)  # A list of unique airlines for easy index access declared early for use in option 7
 num_of_flights = len(flights_df.Airline)  # Length of the dataset for use in any option 1 and 7
+unique_start_cities = list(flights_df.Source)
+unique_dest_cities = list(flights_df.Destination)
 
 pd.set_option('display.width', 320)
 pd.set_option("display.max_columns", 11)  # All necessary for proper formatting in the Run output box
@@ -407,9 +409,34 @@ def display_summary_of_airline():
     print('____________________________________')
 
 
-# Option 8 (Evan)
+# Option 8 (Evan) - Complete
+# print_unique_cities() will print out a sorted list of unique cities for the flights both source and destination.
 def print_unique_cities():
     print("You chose option 8.")
+    print('____________________________________')
+
+    unique_cities = []
+
+    for city in range(0, len(unique_start_cities)):  # For source cities
+        found = False
+        for i in range(0, len(unique_cities)):  # Checks current unique list of cities
+            if unique_cities[i] == unique_start_cities[city]:
+                found = True
+                break
+        if not found:
+            unique_cities.append(unique_start_cities[city])
+    for city in range(0, len(unique_dest_cities)):  # For destination cities
+        found = False
+        for i in range(0, len(unique_cities)):  # Checks current unique list of cities
+            if unique_cities[i] == unique_dest_cities[city]:
+                found = True
+                break
+        if not found:
+            unique_cities.append(unique_dest_cities[city])
+    unique_cities.sort()
+    print('Unique cities: ')
+    print(unique_cities)
+    print('____________________________________')
 
 
 # Option 9 (Gavin) COMPLETED
