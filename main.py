@@ -15,8 +15,8 @@ unique_airlines = set(flights_df.Airline)  # A set of unique airlines declared e
 unique_airlines_list = list(
     unique_airlines)  # A list of unique airlines for easy index access declared early for use in option 7
 num_of_flights = len(flights_df.Airline)  # Length of the dataset for use in any option 1 and 7
-unique_start_cities = list(flights_df.Source)
-unique_dest_cities = list(flights_df.Destination)
+unique_start_cities = list(flights_df.Source)  # Used for option 8
+unique_dest_cities = list(flights_df.Destination)  # Used for option 8
 
 pd.set_option('display.width', 320)
 pd.set_option("display.max_columns", 11)  # All necessary for proper formatting in the Run output box
@@ -433,7 +433,7 @@ def print_unique_cities():
                 break
         if not found:
             unique_cities.append(unique_dest_cities[city])
-    unique_cities.sort()
+    unique_cities.sort()  # Sorts the list just for looks
     print('Unique cities: ')
     print(unique_cities)
     print('____________________________________')
@@ -451,10 +451,35 @@ def print_unique_airlines():
     print("___________________________")
 
 
-# Option 10 (Evan)
+# Option 10 (Evan) - Complete
+# print_all_cities_by_airline() prints out all the cities serviced by airline in the dataset
 def print_all_cities_by_airline():
     print("You chose option 10.")
+    print('____________________________________')
 
+    for airline in unique_airlines_list:
+        unique_cities = []  # Keeps tabs on what city has been seen before
+        flight_list = []
+        for flight in range(0, num_of_flights):  # Not good but the best idea I could think of at the time
+            if flights_df.Airline[flight] == airline:  # If airline is found
+                found_source = False  # Used for if the source has already been seen before
+                found_destination = False  # Used for if the destination has already been seen before
+                for i in range(0, len(unique_cities)):  # Checks every flight in the dataset
+                    if unique_cities[i] == flights_df.Source[flight]:
+                        found_source = True
+                    if unique_cities[i] == flights_df.Destination[flight]:
+                        found_destination = True
+                    if found_source and found_destination:
+                        break
+                if not found_source:  # When the source is new
+                    flight_list.append(flights_df.Source[flight])
+                    unique_cities.append(flights_df.Source[flight])
+                if not found_destination:  # When the destination is new
+                    flight_list.append(flights_df.Destination[flight])
+                    unique_cities.append(flights_df.Destination[flight])
+
+        print('Cities serviced by', airline, flight_list)
+        print('____________________________________')
 
 ######################
 #        MAIN        #
