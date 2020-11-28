@@ -478,6 +478,7 @@ def print_all_cities_by_airline():
                     flight_list.append(flights_df.Destination[flight])
                     unique_cities.append(flights_df.Destination[flight])
 
+        flight_list.sort()
         print('Cities serviced by', airline, flight_list)
         print('____________________________________')
 
