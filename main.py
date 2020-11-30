@@ -64,6 +64,13 @@ def search_by_source_departure_by_date():
         temp_start_list = start_range.split('/')
         temp_end_list = end_range.split('/')
 
+        if not len(temp_start_list) == 2:  # Checks for if the date size is an unexpected value.
+            print('Error! Start date range needs to be a proper month/day date (ex. 1/10, or 5/18).')
+            continue
+        if not len(temp_end_list) == 2:
+            print('Error! Ending date range needs to be a proper month/day date (ex. 1/10, or 5/18).')
+            continue
+
         try:  # Checks for if a non int has been entered
             int(temp_start_list[0])
             int(temp_start_list[1])
