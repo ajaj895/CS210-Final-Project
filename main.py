@@ -355,15 +355,25 @@ def find_source_to_dest_by_date_and_price():
             break
     # --- End of date range error handling ---
     # --- Price handling ---
+    price_min = 0
     price_max = 0
     while 1:
-        try:
-            price_max = int(input('Enter the max price in your range (only numbers and in Indian Rupees): '))
+        try:  # For minimum handling
+            price_min = int(input('Enter the minimum price in your range (only numbers and in Indian Rupees): '))
         except ValueError:
-            print('Error! Numbers only for the price')
+            print('Error! Numbers only for the min price.')
             continue
         if price_max < 0:
-            print('Error! Price range can\'t be negative.')
+            print('Error! Price minimum can\'t be negative.')
+            continue
+        try:  # For maximum handling
+            price_max = int(input('Enter the maximum price in your range (only numbers and in Indian Rupees): '))
+        except ValueError:
+            print('Error! Numbers only for the max price.')
+            continue
+        if price_max < 0:
+            print('Error! Price maximum can\'t be negative.')
+            continue
         else:
             break
     # --- End of price handling ---
@@ -377,7 +387,7 @@ def find_source_to_dest_by_date_and_price():
             final_check_list.append(hit)
 
     for hit in final_check_list:  # Filters by price
-        if int(flights_df.Price[hit]) < price_max:
+        if price_min < int(flights_df.Price[hit]) < price_max:
             found_flights.append(hit)
 
     if len(found_flights) > 0:  # If flights were found
