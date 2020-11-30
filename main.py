@@ -54,7 +54,7 @@ def search_by_source_destination():
 def search_by_source_departure_by_date():
     print("You chose option 2.")
     print('____________________________________')
-    start_city = input('Enter the starting city: ').capitalize()  # Makes sure that the format is not a problem
+    start_city = input('Enter the starting city: ').title()  # Makes sure that the format is not a problem
 
     # --- Error Handling with input ---
     while 1:
@@ -246,8 +246,8 @@ def find_cheapest():
 def find_min_dur():
     print("You chose option 4.")
     print('____________________________________')
-    start_city = input('Enter the starting city: ').capitalize()  # Makes sure that the format is not a problem
-    end_city = input('Enter the destination city: ').capitalize()
+    start_city = input('Enter the starting city: ').title()  # Makes sure that the format is not a problem
+    end_city = input('Enter the destination city: ').title()
     min_flight = ['100', '50']  # Arbitrary high number (first number is hours, second is minutes)
     min_flight_num = -1  # An int used later to retrieve the minimum flight
     # --- Flight finding logic ---
@@ -318,8 +318,8 @@ def find_source_to_dest_by_date_and_price():
     final_check_list = []  # Used for the flights found by destination, check by price still needed
     found_flights = []  # Used for found flights
 
-    start_city = input('Enter the starting city: ').capitalize()  # Makes sure that the format is not a problem
-    destination = input('Enter the destination: ').capitalize()
+    start_city = input('Enter the starting city: ').title()  # Makes sure that the format is not a problem
+    destination = input('Enter the destination: ').title()
 
     # --- Error Handling with input ---
     while 1:
