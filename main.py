@@ -263,7 +263,7 @@ def find_min_dur():
                         min_flight[1] = 0
                         min_flight_num = flight
                 else:
-                    minutes = re.sub(r'm', '', duration[1])
+                    minutes = re.sub(r'm', '', duration[0])
                     if int(minutes) < int(min_flight[1]) and int(min_flight[0]) > 0:
                         # If faster flight found, replaces the current minimum with this minimum flight
                         min_flight[0] = 0
