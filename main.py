@@ -106,9 +106,11 @@ def search_by_source_departure_by_date():
             month = temp_start_list[0]
         for i in range(int(temp_start_list[1]), int(temp_end_list[1]) + 1):  # Inclusive
             day = f'{i}'
+            str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
             if i < 10:  # Formats the day
                 day = f'0{i}'
             str_date = [day, month, '2019']  # day month year, the / is not needed to store
+            date_range.append(str_date_2)
             date_range.append(str_date)
     else:
         for m in range(int(temp_start_list[0]), int(temp_end_list[0]) + 1):  # For each month inclusive
@@ -119,23 +121,29 @@ def search_by_source_departure_by_date():
             if m == int(temp_start_list[0]):  # The start month
                 for d in range(int(temp_start_list[1]), 32):
                     day = f'{d}'
+                    str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
                     if d < 10:  # Formats the day
                         day = f'0{d}'
                     str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date_2)
                     date_range.append(str_date)
             elif m == int(temp_end_list[0]):  # If the end month has been reached, inclusive
                 for d in range(1, int(temp_end_list[1]) + 1):
                     day = f'{d}'
+                    str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
                     if d < 10:  # Formats the day
                         day = f'0{d}'
                     str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date_2)
                     date_range.append(str_date)
             else:  # Any month in-between start and end month
                 for d in range(1, 32):
                     day = f'{d}'
+                    str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
                     if d < 10:  # Formats the day
                         day = f'0{d}'
                     str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date_2)
                     date_range.append(str_date)
 
     hit = False  # Used for telling if flights were found or not
@@ -170,9 +178,11 @@ def search_by_source_departure_by_date_list(start_city, start_date_list, end_dat
             month = start_date_list[0]
         for i in range(int(start_date_list[1]), int(end_date_list[1]) + 1):  # Inclusive
             day = f'{i}'
+            str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
             if i < 10:  # Formats the day
                 day = f'0{i}'
             str_date = [day, month, '2019']  # day month year, the / is not needed to store
+            date_range.append(str_date_2)
             date_range.append(str_date)
     else:
         for m in range(int(start_date_list[0]), int(end_date_list[0]) + 1):  # For each month inclusive
@@ -183,23 +193,29 @@ def search_by_source_departure_by_date_list(start_city, start_date_list, end_dat
             if m == int(start_date_list[0]):  # The start month
                 for d in range(int(start_date_list[1]), 32):
                     day = f'{d}'
+                    str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
                     if d < 10:  # Formats the day
                         day = f'0{d}'
                     str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date_2)
                     date_range.append(str_date)
             elif m == int(end_date_list[0]):  # If the end month has been reached, inclusive
                 for d in range(1, int(end_date_list[1]) + 1):
                     day = f'{d}'
+                    str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
                     if d < 10:  # Formats the day
                         day = f'0{d}'
                     str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date_2)
                     date_range.append(str_date)
             else:  # Any month in-between start and end month
                 for d in range(1, 32):
                     day = f'{d}'
+                    str_date_2 = [day, month, '2019'] # Needed because the dataset is inconsistent with day
                     if d < 10:  # Formats the day
                         day = f'0{d}'
                     str_date = [day, month, '2019']  # day month year, the / is not needed to store
+                    date_range.append(str_date_2)
                     date_range.append(str_date)
     # --- End of date_range formatting ---
 
