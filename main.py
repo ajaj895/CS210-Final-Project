@@ -1,5 +1,6 @@
 # Link to assignment: https://westernonline.wiu.edu/d2l/le/content/169197/viewContent/2469388/View?ou=169197
 # Data used: https://www.kaggle.com/vinaypratap/flight-price
+# Github repo for the project: https://github.com/ajaj895/CS210-Final-Project
 
 # Authors: Evan Colwell
 #          Gavin Horner
@@ -9,7 +10,7 @@
 
 import re  # Needed for option 4
 import pandas as pd
-import numpy as np
+import numpy as np  # Needed for option 7
 
 flights_df = pd.read_csv("Data_Train.csv")  # Open our data file and store it as a data frame for use within the methods
 unique_airlines = set(flights_df.Airline)  # A set of unique airlines declared early for use in option 9.
