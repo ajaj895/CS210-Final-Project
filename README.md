@@ -23,7 +23,7 @@ Python 3 is required for our project. The only one tested was Python 3.8.6.
 
 ## SCREENSHOTS
 
-![Starting propmt](images/Start_Screen.png)
+![Starting prompt](images/Start_Screen.png)
 
 Here is what you are greeted by when you start the program, you enter in a number corresponding 
 to the function you want to run. Gavin and I worked evenly on this where we each worked on half of the 
